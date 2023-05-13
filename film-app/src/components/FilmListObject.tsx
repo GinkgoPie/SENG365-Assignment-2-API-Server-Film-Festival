@@ -29,7 +29,6 @@ interface IUserProps {
 const FilmListObject = (filmProps: IFilmProps) => {
     const [film] = React.useState<Film>(filmProps.film)
     const genres = useGenresStore(state => state.genres)
-    const setGenres = useGenresStore(state => state.setGenres)
     const userReturn = useUsersStore(state => state.userReturn)
     const setUserReturn = useUsersStore(state => state.setUserReturn)
     const users = useUsersStore(state => state.users)
@@ -46,23 +45,6 @@ const FilmListObject = (filmProps: IFilmProps) => {
     const handleEditDialogClose = () => {
         setOpenEditDialog(false); }
 
-    React.useEffect(() => {
-        const getGenres = () => { axios.get('https://seng365.csse.canterbury.ac.nz/api/v1/films/genres')
-            .then((response) => {
-                setErrorFlag(false)
-                setErrorMessage("")
-                setGenres(response.data)
-            }, (error) => {
-                setErrorFlag(true)
-                setErrorMessage(error.toString())
-            }) }
-        getGenres()
-    }, [setGenres])
-
-
-
-
-
 
     // const deleteFilm = () => { axios.delete('http://localhost:3000/api/users/' + user.user_id)
     //     .then(() => { deleteUserFromStore(user)
@@ -73,10 +55,14 @@ const FilmListObject = (filmProps: IFilmProps) => {
     // }
     const userCardStyles: CSS.Properties = {
         display: "inline-block",
+        alignItems: 'center',
+        justifyContent: 'flex-start',
         height: "40%",
-        width: "30%",
-        margin: "10px",
-        padding: "5px" }
+        width: "25%",
+        margin: "auto",
+        padding: "10px",
+        textAlign: "center"
+    }
 
     const getFilmGenre = (film: Film) => {
         return genres.map((genre: Genre) => {

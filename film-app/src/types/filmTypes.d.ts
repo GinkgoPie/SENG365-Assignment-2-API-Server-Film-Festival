@@ -44,3 +44,5 @@ type filmSearchQuery = {
     count?: number,
     startIndex?: number
 }
+
+type AgeRating = "G" | "PG" | "M" | "R13" | "R15" | "R16" | "R18" | "RP";
