@@ -1,6 +1,8 @@
 import {create} from 'zustand';
 interface FilmsState {
+
     films: Film[];
+
     setFilms: (films: Array<Film>) => void;
 
     //editFilm: (film: film, newUsername: string) => void;
@@ -9,7 +11,8 @@ interface FilmsState {
 }
 
 const getLocalStorage = (key: string): Film[] => JSON.parse(window.localStorage.getItem(key) as string);
-const setLocalStorage = (key: string, value:Array<Film>) => window.localStorage.setItem(key, JSON.stringify(value));
+const setLocalStorage = (key: string, value: any) => window.localStorage.setItem(key, JSON.stringify(value));
+
 
 const useStore = create<FilmsState>((set) => ({
 

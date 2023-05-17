@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
-import {Delete, Edit} from "@mui/icons-material";
+import FilmPage from "./Film"
+import {Delete, Edit, Padding} from "@mui/icons-material";
 import {useFilmStore} from "../store/film";
 import {useGenresStore} from "../store/genre";
 import {useUsersStore} from "../store/user";
@@ -11,6 +12,7 @@ import {
 } from "@mui/material"; import CSS from 'csstype';
 import { FaFilm } from 'react-icons/fa';
 import { FaStar } from "react-icons/fa";
+import {Link} from "react-router-dom";
 interface IFilmProps {
     film: Film
 }
@@ -116,7 +118,7 @@ const FilmListObject = (filmProps: IFilmProps) => {
 
 
     return (
-        <Card sx={userCardStyles}>
+        <Card sx={userCardStyles} component={Link} to={`/films/${film.filmId}`}>
             <CardMedia
                 component="img"
                 sx={{ objectFit: "contain" }}
@@ -144,7 +146,7 @@ const FilmListObject = (filmProps: IFilmProps) => {
             </Typography>
             <Typography component="legend">
                 <p>Rating:</p>
-                <Rating name="customized-10" value={film.rating} readOnly max={10} />
+                <Rating name="customized-10" value={film.rating||null} readOnly max={10} />
             </Typography>
             </CardContent>
         </Card> )

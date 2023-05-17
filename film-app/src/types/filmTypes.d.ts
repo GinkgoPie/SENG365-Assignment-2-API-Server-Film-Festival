@@ -10,11 +10,11 @@ type Film = {
     ageRating: string
 }
 
-type filmFull = {
+type FilmFull = {
     description: string,
     numReviews: number,
     runtime: number
-} & film
+} & Film
 
 type filmReturn = {
     films: film[],
@@ -26,7 +26,7 @@ type Genre = {
     name: string
 }
 
-type review = {
+type Review = {
     reviewerId: number,
     rating: number,
     review: string,
