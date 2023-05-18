@@ -13,6 +13,7 @@ import {
     Checkbox, ListItemText, Select, Button, SelectChangeEvent
 } from "@mui/material";
 import FilmListObject from "./FilmListObject";
+import NavigationBar from "./NavigationBar";
 import {useFilmStore} from "../store/film";
 import {useLocation} from "react-router-dom";
 import {useGenresStore} from "../store/genre";
@@ -139,7 +140,7 @@ const FilmList = () => {
 
 
     const card: CSS.Properties = {
-        padding: "10px",
+        padding: "60px",
         margin: "20px",
         display: "block",
         width: "90%" }
@@ -147,104 +148,108 @@ const FilmList = () => {
 
 
     return (
-        <Paper elevation={3} style={card}>
-            <form onSubmit={handleSearch} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", margin: "auto", padding: "20px" }}>
-                <input type="text" value={query} onChange={handleInputChange} style={{ margin: "0px 5px" , width: '400px', height: '60px'}} />
-                <Button type="submit" variant="contained" sx={{ margin: "0px 5px" }}>Search</Button>
-            </form>
-            <p>{selectedSortOption}</p>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", padding: "20px" }}>
-                <FormControl sx={{ margin: "0px 5px", width: '200px', height: '60px' }}>
-                    <InputLabel id="sort-by-label">Sort By</InputLabel>
-                    <Select
-                        labelId="sort-by-label"
-                        id="sort-by"
-                        value={selectedSortOption}
-                        onChange={handleSortChange}
-                        input={<OutlinedInput label="Sort By" />}
-                    >
-                        <MenuItem value={'ALPHABETICAL_ASC'}>Title (A-Z)</MenuItem>
-                        <MenuItem value={'ALPHABETICAL_DESC'}>Title (Z-A)</MenuItem>
-                        <MenuItem value={'RATING_ASC'}>Rating (Lowest to Highest)</MenuItem>
-                        <MenuItem value={'RATING_DESC'}>Rating (Highest to Lowest)</MenuItem>
-                        <MenuItem value={'RELEASED_ASC'}>Release Date (Oldest to Newest)</MenuItem>
-                        <MenuItem value={'RELEASED_DESC'}>Release Date (Newest to Oldest)</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl sx={{ margin: "0px 5px", width: '400px', height: '60px'}}>
-                    <InputLabel id="genre-filter-label">Genre</InputLabel>
-                    <Select
-                        labelId="genre-filter-label"
-                        id="genre-filter"
-                        multiple
-                        value={selectedGenres}
-                        onChange={handleGenreSelection}
-                        input={<OutlinedInput label="Genre" />}
-                        renderValue={(selected) =>
-                            selected?.map((id) => genres.find((genre) => genre.genreId === id)?.name).join(", ")
-                        }
-                        MenuProps={{
-                            anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left",
-                            },
-                            transformOrigin: {
-                                vertical: "top",
-                                horizontal: "left",
-                            },
-                        }}
-                    >
-                        {genres.map((genre) => (
-                            <MenuItem key={genre.genreId} value={genre.genreId}>
-                                <Checkbox checked={selectedGenres.indexOf(genre.genreId) > -1} />
-                                <ListItemText primary={genre.name} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <FormControl sx={{ margin: "0px 5px", width: '400px', height: '60px' }}>
-                    <InputLabel id="age-rating-filter-label">Age Rating</InputLabel>
-                    <Select
-                        labelId="age-rating-filter-label"
-                        id="age-rating-filter"
-                        multiple
-                        value={selectedAgeRatings}
-                        onChange={handleAgeRatingSelection}
-                        input={<OutlinedInput label="Age Rating" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={{
-                            anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left"
-                            },
-                            transformOrigin: {
-                                vertical: "top",
-                                horizontal: "left"
+        <div>
+            <NavigationBar />
+            <Paper elevation={3} style={card}>
+                <form onSubmit={handleSearch} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", margin: "auto", padding: "20px" }}>
+                    <input type="text" value={query} onChange={handleInputChange} style={{ margin: "0px 5px" , width: '400px', height: '60px'}} />
+                    <Button type="submit" variant="contained" sx={{ margin: "0px 5px" }}>Search</Button>
+                </form>
+                <p>{selectedSortOption}</p>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", padding: "20px" }}>
+                    <FormControl sx={{ margin: "0px 5px", width: '200px', height: '60px' }}>
+                        <InputLabel id="sort-by-label">Sort By</InputLabel>
+                        <Select
+                            labelId="sort-by-label"
+                            id="sort-by"
+                            value={selectedSortOption}
+                            onChange={handleSortChange}
+                            input={<OutlinedInput label="Sort By" />}
+                        >
+                            <MenuItem value={'ALPHABETICAL_ASC'}>Title (A-Z)</MenuItem>
+                            <MenuItem value={'ALPHABETICAL_DESC'}>Title (Z-A)</MenuItem>
+                            <MenuItem value={'RATING_ASC'}>Rating (Lowest to Highest)</MenuItem>
+                            <MenuItem value={'RATING_DESC'}>Rating (Highest to Lowest)</MenuItem>
+                            <MenuItem value={'RELEASED_ASC'}>Release Date (Oldest to Newest)</MenuItem>
+                            <MenuItem value={'RELEASED_DESC'}>Release Date (Newest to Oldest)</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ margin: "0px 5px", width: '400px', height: '60px'}}>
+                        <InputLabel id="genre-filter-label">Genre</InputLabel>
+                        <Select
+                            labelId="genre-filter-label"
+                            id="genre-filter"
+                            multiple
+                            value={selectedGenres}
+                            onChange={handleGenreSelection}
+                            input={<OutlinedInput label="Genre" />}
+                            renderValue={(selected) =>
+                                selected?.map((id) => genres.find((genre) => genre.genreId === id)?.name).join(", ")
                             }
-                        }}
-                    >
-                        {ageRatings.map((ageRating) => (
-                            <MenuItem key={ageRating} value={ageRating}>
-                                <Checkbox checked={selectedAgeRatings.indexOf(ageRating) > -1} />
-                                <ListItemText primary={ageRating} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
-                {errorFlag ?
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {errorMessage}
-                    </Alert>
-                    : ""}
-                {film_rows()}
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", margin: "auto", padding: "20px" }}>
-                <Pagination count={pageCount} page={currentPage} onChange={handlePageChange} />
-            </div>
-        </Paper>
+                            MenuProps={{
+                                anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                },
+                                transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left",
+                                },
+                            }}
+                        >
+                            {genres.map((genre) => (
+                                <MenuItem key={genre.genreId} value={genre.genreId}>
+                                    <Checkbox checked={selectedGenres.indexOf(genre.genreId) > -1} />
+                                    <ListItemText primary={genre.name} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ margin: "0px 5px", width: '400px', height: '60px' }}>
+                        <InputLabel id="age-rating-filter-label">Age Rating</InputLabel>
+                        <Select
+                            labelId="age-rating-filter-label"
+                            id="age-rating-filter"
+                            multiple
+                            value={selectedAgeRatings}
+                            onChange={handleAgeRatingSelection}
+                            input={<OutlinedInput label="Age Rating" />}
+                            renderValue={(selected) => selected.join(", ")}
+                            MenuProps={{
+                                anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left"
+                                },
+                                transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left"
+                                }
+                            }}
+                        >
+                            {ageRatings.map((ageRating) => (
+                                <MenuItem key={ageRating} value={ageRating}>
+                                    <Checkbox checked={selectedAgeRatings.indexOf(ageRating) > -1} />
+                                    <ListItemText primary={ageRating} />
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                    {errorFlag ?
+                        <Alert severity="error">
+                            <AlertTitle>Error</AlertTitle>
+                            {errorMessage}
+                        </Alert>
+                        : ""}
+                    {film_rows()}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", margin: "auto", padding: "20px" }}>
+                    <Pagination count={pageCount} page={currentPage} onChange={handlePageChange} />
+                </div>
+            </Paper>
+        </div>
+
 
     ) }
 

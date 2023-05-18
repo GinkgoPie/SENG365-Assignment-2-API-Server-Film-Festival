@@ -9,7 +9,8 @@ import {
     Button, Card, CardActions, CardContent, CardMedia, Dialog,
     DialogActions, DialogContent, DialogContentText,
     DialogTitle, IconButton, Rating, TextField, Typography
-} from "@mui/material"; import CSS from 'csstype';
+} from "@mui/material";
+import CSS from 'csstype';
 import { FaFilm } from 'react-icons/fa';
 import { FaStar } from "react-icons/fa";
 import {Link} from "react-router-dom";

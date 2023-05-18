@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a33481cf-1a8b-4cce-8cb5-107709633bde" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/film-app/src/components/Home.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/film-app/src/components/NavigationBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/film-app/src/components/Register.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/seng365-assignment2-2023.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/seng365-assignment2-2023.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/build/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/favicon 3.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/favicon 4.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/build/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/logo192 3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/logo192 4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/logo512 3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/logo512 4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/manifest 3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/manifest 4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/robots 3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/robots 4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.7701aaa1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.7701aaa1.js.LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.7701aaa1.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/0.pack" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/0.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/index.pack" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/index.pack" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/FilmListObject.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/FilmListObject.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/Films.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/Films.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/storage/Film/defaultFilm.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/public/Film/defaultFilm.jpeg" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2PiVuzti4NSyZrUkqfIUU4WMKxm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/csse/users/jba214/Desktop/SENG365/seng365-assignment1-2023",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "ts.external.directory.path": "/csse/users/jba214/Desktop/SENG365/seng365-assignment1-2023/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "TypeScript JSX"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/film-app/public" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/film-app/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/../seng365-assignment1-2023/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start" />
+        <item itemvalue="npm.build" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a33481cf-1a8b-4cce-8cb5-107709633bde" name="Changes" comment="" />
+      <created>1683940115717</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1683940115717</updated>
+      <workItem from="1683940118468" duration="237000" />
+      <workItem from="1683940366617" duration="1414000" />
+      <workItem from="1683941795309" duration="12179000" />
+      <workItem from="1684365589443" duration="15697000" />
+    </task>
+    <task id="LOCAL-00001" summary=" stuck on filter">
+      <created>1683956522539</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1683956522539</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="film" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value=" stuck on filter" />
+    <option name="LAST_COMMIT_MESSAGE" value=" stuck on filter" />
+  </component>
+</project>

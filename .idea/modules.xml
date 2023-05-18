@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../seng365-assignment1-2023/.idea/seng365-assignment1-2023.iml" filepath="$PROJECT_DIR$/../seng365-assignment1-2023/.idea/seng365-assignment1-2023.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/seng365-assignment2-2023.iml" filepath="$PROJECT_DIR$/.idea/seng365-assignment2-2023.iml" />
     </modules>
   </component>
