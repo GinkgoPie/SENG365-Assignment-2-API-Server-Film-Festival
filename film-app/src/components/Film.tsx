@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Delete, Edit} from "@mui/icons-material";
 import {useFilmStore} from "../store/film";
@@ -10,12 +10,14 @@ import {
     Alert, AlertTitle,
     Button, Card, CardActions, CardContent, CardMedia, Dialog,
     DialogActions, DialogContent, DialogContentText,
-    DialogTitle, IconButton, Paper, Rating, TextField, Typography
+    DialogTitle, IconButton, Paper, Rating, SelectChangeEvent, TextField, Typography
 } from "@mui/material";
 import CSS from 'csstype';
 import { FaFilm } from 'react-icons/fa';
 import LoadingPage from "./Loading";
 import FilmListObject from "./FilmListObject";
+import NavigationBar from "./NavigationBar";
+import {useAuthStore} from "../store/authentication";
 interface IFilmProps {
     filmFull: FilmFull
 }
@@ -24,20 +26,80 @@ interface IGenreProps {
     genre: Genre
 }
 
+interface MyReview {
+    rating: number;
+    review?: string;
+
+}
+
 
 const FilmPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const authentication = useAuthStore((state) => state.authentication);
+    const userId = useAuthStore((state) => state.userId);
     const [filmFull, setFilmFull] = React.useState<FilmFull>();
     const genres = useGenresStore(state => state.genres)
     const [reviews, setReviews] = React.useState<Review[]>();
     const [errorFlag, setErrorFlag] = React.useState(false)
-    const [errorMessage, setErrorMessage] = React.useState("")
+    const [errorMessage, setErrorMessage] = React.useState('')
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
     const [openEditDialog, setOpenEditDialog] = React.useState(false)
+    const [openReviewDialog, setOpenReviewDialog] = React.useState(false)
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const films = useFilmStore(state => state.films)
     const setFilms = useFilmStore(state => state.setFilms)
+    const deleteFilmFromStore = useFilmStore((state) => state.removeFilm);
+    const [rating, setRating] = React.useState<number | null>(null)
+    const [review, setReview] = React.useState<string | null>(null)
+    const [reviewErrorFlag, setReviewErrorFlag] = React.useState(false)
+    const [reviewErrorMessage, setReviewErrorMessage] = React.useState('')
+
+    const ReviewFilm = () => {
+        if (rating === null) {
+            setReviewErrorFlag(true);
+            setReviewErrorMessage('You must enter a valid rating')
+            return
+        }
+
+        const myReview: MyReview = {
+            rating
+        }
+        if (review !== null) {
+            myReview.review = review
+        }
+
+        axios
+            .post(`https://seng365.csse.canterbury.ac.nz/api/v1/films/${id}/reviews`, myReview, {
+                headers: {
+                    'X-Authorization': authentication
+                },
+            })
+            .then((response) => {
+                setOpenReviewDialog(false)
+                setReviewErrorFlag(false)
+            })
+            .catch((error) => {
+                setReviewErrorFlag(true);
+                setReviewErrorMessage(error.response.statusText);
+            });
+
+
+    }
+
+    const handleReviewClick = (event: React.MouseEvent) => {
+        if (authentication === '') {
+            setErrorFlag(true);
+            setErrorMessage('Please login or sign up first to review.')
+        }else{
+            event.stopPropagation();
+            setOpenReviewDialog(true);
+        }
+
+    };
+
+
     React.useEffect(() => {
         const getFilmFull = () => {
             let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id
@@ -49,10 +111,11 @@ const FilmPage = () => {
                     setFilmFull(response.data)
                 }, (error) => {
                     setErrorFlag(true)
-                    setErrorMessage(url)
+                    setErrorMessage(error.toString())
+                    navigate('/404NotFound');
                 }) }
         getFilmFull()
-    }, [id, filmFull])
+    }, [id, handleReviewClick])
 
     React.useEffect(() => {
         const getReviews = () => {
@@ -65,10 +128,10 @@ const FilmPage = () => {
                     setReviews(response.data)
                 }, (error) => {
                     setErrorFlag(true)
-                    setErrorMessage(url)
+                    setErrorMessage(error.toString() )
                 }) }
         getReviews()
-    }, [id])
+    }, [id, handleReviewClick])
 
     const userCardStyles: CSS.Properties = {
         display: "inline-block",
@@ -77,7 +140,7 @@ const FilmPage = () => {
         width: '70%',
         height: '60%',
         margin: '0 auto',
-        padding: "10px",
+        padding: "80px",
         textAlign: "center"
     }
 
@@ -139,6 +202,65 @@ const FilmPage = () => {
             })
     };
 
+    const handleDeleteDialogClose = () => {
+        setOpenDeleteDialog(false);
+    };
+
+    const handleEditDialogClose = () => {
+        setOpenEditDialog(false);
+    };
+
+    const handleReviewDialogClose = () => {
+        setOpenReviewDialog(false);
+    };
+
+
+
+
+
+    const handleDeleteClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setOpenDeleteDialog(true);
+    };
+
+    const handleEditClick = (event?: React.MouseEvent) => {
+        if (event) {
+            event.stopPropagation();
+        }
+        navigate(`/edit-film/${filmFull?.filmId}`);
+    };
+
+
+
+    const deleteFilm = () => {
+        setOpenDeleteDialog(false);
+        const confirmDelete = window.confirm("Are you sure about deleting this film?");
+        if (confirmDelete) {
+            if (filmFull?.numReviews === 0) {
+                window.alert("Cannot delete a film with 0 review!");
+                window.close();
+                return
+            }
+            axios
+                .delete(
+                    `https://seng365.csse.canterbury.ac.nz/api/v1/films/${filmFull?.filmId}`,
+                    {
+                        headers: {
+                            "X-Authorization": authentication,
+                        },
+                    }
+                )
+                .then(() => {
+                    const film:Film = filmFull!
+                    deleteFilmFromStore(film);
+                })
+                .catch((error) => {
+                    setErrorFlag(true);
+                    setErrorMessage(error.response.statusText);
+                });
+        }
+    };
+
 
     const handleOpen = () => {
         setOpen(true);
@@ -195,21 +317,30 @@ const FilmPage = () => {
     React.useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 500);
+        }, 800);
 
         return () => {
             clearTimeout(timer);
         };
     }, []);
 
+    const handleRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRating(Number(event.target.value));
+    };
+
+    const handleReviewChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setReview(event.target.value);
+    };
+
+
+
+
     if (isLoading) {
         return <LoadingPage />;
-    }
-    if (filmFull === undefined) {
-        return <NotFound />;
-    } else {
+    }  else {
         return (
             <Paper elevation={3} style={{ padding: '20px' }}>
+                <NavigationBar />
                 <Card sx={userCardStyles}>
                     <CardMedia
                         component="img"
@@ -228,29 +359,29 @@ const FilmPage = () => {
                     />
                     <CardContent>
                         <Typography variant="h4">
-                            {filmFull.title}
+                            {filmFull?.title}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            <FaFilm /> {filmFull.ageRating}
+                            <FaFilm /> {filmFull?.ageRating}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            Release date: {filmFull.releaseDate.slice(0,10)}
+                            Release date: {filmFull?.releaseDate.slice(0,10)}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            Genre: {getFilmGenre(filmFull)}
+                            Genre: {getFilmGenre(filmFull!)}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
                             {getDirector()}
                         </Typography>
                         <Typography component="legend">
                             <p>Rating:</p>
-                            <Rating name="customized-10" value={filmFull.rating||null} readOnly max={10} />
+                            <Rating name="customized-10" value={filmFull?.rating||null} readOnly max={10} />
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            Description: {filmFull.description}
+                            Description: {filmFull?.description}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            <Button onClick={handleOpen}>{filmFull.numReviews} reviews</Button>
+                            <Button onClick={handleOpen}>{filmFull?.numReviews} reviews</Button>
                             <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
                                 <DialogTitle>Reviews</DialogTitle>
                                 <DialogContent>
@@ -263,18 +394,99 @@ const FilmPage = () => {
                                 </DialogActions>
                             </Dialog>
                         </Typography>
+                        {userId !== filmFull?.directorId &&(
+                            <Button color="primary" onClick={handleReviewClick}>
+                                Add review
+                            </Button>
+                        )}
+                        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                            {errorFlag &&
+                                <Alert severity="error">
+                                    <AlertTitle>Error</AlertTitle>
+                                    {errorMessage}
+                                </Alert>}
+                        </div>
                     </CardContent>
+                    <CardActions>
+                        {userId === filmFull?.directorId && (
+                            <IconButton color="error" onClick={handleDeleteClick}>
+                                <Delete />
+                            </IconButton>
+                        )}
+                        {userId === filmFull?.directorId && (
+                            <IconButton color="primary" onClick={handleEditClick}>
+                                <Edit />
+                            </IconButton>
+                        )}
+                    </CardActions>
+                    {/* Add review Dialog */}
+                    <Dialog
+                        open={openReviewDialog}
+                        onClose={handleReviewDialogClose}
+                        maxWidth="sm"
+                        fullWidth
+                    >
+                        <DialogTitle>Add a review</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="rating"
+                                label="Rating (1-10)"
+                                type="number"
+                                onChange={handleRatingChange}
+                                inputProps={{ min: 0, max: 10 }}
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                id="comment"
+                                label="Comment"
+                                onChange={handleReviewChange}
+                                multiline
+                                rows={4}
+                                fullWidth
+                            />
+                            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                                {reviewErrorFlag &&
+                                    <Alert severity="error">
+                                        <AlertTitle>Error</AlertTitle>
+                                        {reviewErrorMessage}
+                                    </Alert>}
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleReviewDialogClose}>Cancel</Button>
+                            <Button onClick={ReviewFilm} color="error">
+                                Post
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    {/* Delete Dialog */}
+                    <Dialog
+                        open={openDeleteDialog}
+                        onClose={handleDeleteDialogClose}
+                        maxWidth="sm"
+                        fullWidth
+                    >
+                        <DialogTitle>Delete Film</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Are you sure you want to delete the film?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleDeleteDialogClose}>Cancel</Button>
+                            <Button onClick={deleteFilm} color="error">
+                                Delete
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Card>
                 <Typography variant="h4" color="text.secondary" padding='20px'>
                     Films you might like...
                 </Typography>
                 <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
-                    {errorFlag ?
-                        <Alert severity="error">
-                            <AlertTitle>Error</AlertTitle>
-                            {errorMessage}
-                        </Alert>
-                        : ""}
                     {getSimilarFilms()}
                 </div>
 

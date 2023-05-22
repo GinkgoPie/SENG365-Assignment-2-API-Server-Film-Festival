@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import {Button, Card, CardContent, Paper, TextField} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Alert, AlertTitle, Button, Card, CardContent, Paper, TextField } from '@mui/material';
 import CSS from 'csstype';
 import axios from "axios";
+import NavigationBar from "./NavigationBar";
+import { useAuthStore } from "../store/authentication";
+import {Link, useNavigate} from "react-router-dom";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -10,7 +13,6 @@ const RegisterPage = () => {
         email: '',
         password: '',
         confirmPassword: '',
-        profilePicture: null,
     });
 
     const [errors, setErrors] = useState({
@@ -22,42 +24,50 @@ const RegisterPage = () => {
     });
     const [errorFlag, setErrorFlag] = React.useState(false)
     const [errorMessage, setErrorMessage] = React.useState("")
+    const [showPassword, setShowPassword] = useState(false);
+    const [postForm, setPostForm] = React.useState(false)
+    const authentication = useAuthStore(state => state.authentication)
+    const setAuthentication = useAuthStore(state => state.setAuthentication)
+    const userId = useAuthStore(state => state.userId)
+    const setUserId = useAuthStore(state => state.setUserId)
+    const [registerSuccess, setRegisterSuccess] = React.useState(false);
+    const [image, setImage] = useState<File | null>(null);
+    const [imageType, setImageType] = useState<any | null>(null);
+    const supportedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+    const navigate = useNavigate();
 
-    React.useEffect(() => {
-        const postRegisterForm = () => {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/register'
-            const { confirmPassword, ...formDataWithoutConfirmPassword } = formData;
-            axios.post(url, formDataWithoutConfirmPassword)
-                .then((response) => {
-                    console.log(response);
-                }, (error) => {
-                    setErrorFlag(true)
-                    setErrorMessage(url)
-                }) }
-        postRegisterForm()
-    }, [setErrors])
-
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, files } = e.target;
 
         if (type === 'file') {
             const file = files?.[0] || null;
-            setFormData((prevData) => ({ ...prevData, [name]: file }));
+            if (file) {
+                const fileReader = new FileReader();
+                fileReader.onloadend = () => {
+                    setImage(file);
+                    setImageType(file.type);
+                };
+                fileReader.readAsDataURL(file);
+            } else {
+                setImage(null);
+                setImageType(null);
+            }
         } else {
             setFormData((prevData) => ({ ...prevData, [name]: value }));
         }
 
         setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     };
+
     const isValidEmail = (email: string) => {
         // Simple email validation regex pattern
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);    const isValidEmail = (email: string) => {
-        // Simple email validation regex pattern
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
-    }};
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,6 +79,7 @@ const RegisterPage = () => {
             email: '',
             password: '',
             confirmPassword: '',
+            image: '',
         };
 
         if (formData.firstName.trim() === '') {
@@ -91,9 +102,17 @@ const RegisterPage = () => {
 
         if (formData.confirmPassword.trim() === '') {
             newErrors.confirmPassword = 'Confirm password is required';
+        } else if (formData.password.trim().length < 6) {
+            newErrors.confirmPassword = 'Passwords should be at least 6 characters long';
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match';
         }
+
+
+        if (image && !supportedImageTypes.includes(imageType)) {
+            newErrors.image = 'Please select an image file in JPEG, PNG, or GIF format.';
+        }
+
 
         // Update errors state
         setErrors(newErrors);
@@ -102,10 +121,51 @@ const RegisterPage = () => {
         if (Object.values(newErrors).every(value => value === '')) {
             // Perform registration logic here
             console.log('Form submitted successfully');
+            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/register'
+            const { confirmPassword, ...formDataWithoutConfirmPassword } = formData;
+            axios.post(url, formDataWithoutConfirmPassword)
+                .then((response) => {
+                    console.log(response);
+                    setUserId(response.data.userId)
+                    const loginData = { email: formData.email, password: formData.password }
+                    let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/login'
+                    axios.post(url, loginData)
+                        .then((response) => {
+                            console.log('Logging in successfully');
+                            setAuthentication(response.data.token)
+                            setUserId(response.data.userId)
+                            if (image !== null) {
+                                console.log('Try profile upload');
 
-    };};
+                                axios
+                                    .put(`https://seng365.csse.canterbury.ac.nz/api/v1/users/${response.data.userId}/image`, image, {
+                                        headers: {
+                                            'X-Authorization': response.data.token,
+                                            'Content-Type': imageType
+                                        },
+                                    })
+                                    .then((response) => {
+                                        console.log('Put profile successfully');
+                                        navigate(`/myProfile`);
+                                    })
+                                    .catch((error) => {
+                                        setErrorFlag(true);
+                                        setErrorMessage(error.response.statusText);
+                                    });
+                            }
+                            navigate(`/myProfile`);
+                        }, (error) => {
+                            setErrorFlag(true)
+                            setErrorMessage(error.response.statusText)
+                        })
 
+                }, (error) => {
+                    setErrorFlag(true)
+                    setErrorMessage(error.response.statusText)
+                })
 
+        }
+    };
 
     const containerStyles: CSS.Properties = {
         display: 'grid',
@@ -121,9 +181,11 @@ const RegisterPage = () => {
         margin: '20 auto',
         padding: "50px",
         textAlign: "center"
-    }
+    };
+
     return (
         <Paper elevation={3} style={{ padding: '150px' }}>
+            <NavigationBar />
             <Card sx={registerCardStyles}>
                 <CardContent>
                     <h2>Register</h2>
@@ -164,18 +226,17 @@ const RegisterPage = () => {
 
                             <TextField
                                 label="Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
                                 fullWidth
                                 required
                             />
-                            {errors.password && <span>{errors.password}</span>}
 
                             <TextField
                                 label="Confirm Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
@@ -183,27 +244,39 @@ const RegisterPage = () => {
                                 required
                             />
                             {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-
-                            <div>
-                                <label htmlFor="profilePicture">Profile Picture (Optional) : </label>
+                            <Button onClick={togglePasswordVisibility}>
+                                {showPassword ? 'Hide Password' : 'Show Password'}
+                            </Button>
+                            {errors.password && <span>{errors.password}</span>}
+                            <div style={{ margin: '30px' }}>
+                                <label htmlFor="filmImage">Profile image: </label>
                                 <input
                                     type="file"
-                                    id="profilePicture"
-                                    name="profilePicture"
+                                    id="filmImage"
+                                    name="filmImage"
                                     accept="image/jpeg, image/png, image/gif"
                                     onChange={handleChange}
                                 />
                             </div>
                         </div>
 
-                        <Button type="submit" variant="contained" sx={{ margin: "25px 5px", backgroundColor:"#025464" , color: '#ffffff'}}>
+                        <Button type="submit" variant="contained" sx={{ margin: "25px 5px", backgroundColor: "#025464", color: '#ffffff' }}>
                             Register
                         </Button>
                     </form>
+                    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                        {errorFlag ?
+                            <Alert severity="error">
+                                <AlertTitle>Error</AlertTitle>
+                                {errorMessage}
+                            </Alert>
+                            : ""}
+                    </div>
+
                 </CardContent>
             </Card>
-        </Paper>  )
-
-}
+        </Paper>
+    );
+};
 
 export default RegisterPage;

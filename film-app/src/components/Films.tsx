@@ -123,7 +123,7 @@ const FilmList = () => {
                     setFilms(response.data.films)
                 }, (error) => {
                     setErrorFlag(true)
-                    setErrorMessage(url)
+                    setErrorMessage(error.toString())
                 }) }
         getFilms()
     }, [setFilms, selectedGenres, selectedAgeRatings, selectedSortOption])

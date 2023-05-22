@@ -13,7 +13,8 @@ import {
 import CSS from 'csstype';
 import { FaFilm } from 'react-icons/fa';
 import { FaStar } from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useAuthStore} from "../store/authentication";
 interface IFilmProps {
     film: Film
 }
@@ -30,32 +31,27 @@ interface IUserProps {
 
 
 const FilmListObject = (filmProps: IFilmProps) => {
-    const [film] = React.useState<Film>(filmProps.film)
-    const genres = useGenresStore(state => state.genres)
-    const userReturn = useUsersStore(state => state.userReturn)
-    const setUserReturn = useUsersStore(state => state.setUserReturn)
-    const users = useUsersStore(state => state.users)
-    const addUser = useUsersStore(state => state.addUser)
-    const [username, setUsername] = React.useState("")
-    const [errorFlag, setErrorFlag] = React.useState(false)
-    const [errorMessage, setErrorMessage] = React.useState("")
-    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
-    const [openEditDialog, setOpenEditDialog] = React.useState(false)
-    const deleteUserFromStore = useFilmStore(state => state.removeFilm)
-   // const editUserFromStore = useFilmStore(state => state.editUser)
-    const handleDeleteDialogClose = () => { setOpenDeleteDialog(false);
-    };
-    const handleEditDialogClose = () => {
-        setOpenEditDialog(false); }
+    const navigate = useNavigate();
+    const authentication = useAuthStore((state) => state.authentication);
+    const userId = useAuthStore((state) => state.userId);
+    const [film] = React.useState<Film>(filmProps.film);
+    const genres = useGenresStore((state) => state.genres);
+    const userReturn = useUsersStore((state) => state.userReturn);
+    const setUserReturn = useUsersStore((state) => state.setUserReturn);
+    const users = useUsersStore((state) => state.users);
+    const addUser = useUsersStore((state) => state.addUser);
+    const [username, setUsername] = React.useState("");
+    const [errorFlag, setErrorFlag] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const [openEditDialog, setOpenEditDialog] = React.useState(false);
+    const deleteFilmFromStore = useFilmStore((state) => state.removeFilm);
 
 
-    // const deleteFilm = () => { axios.delete('http://localhost:3000/api/users/' + user.user_id)
-    //     .then(() => { deleteUserFromStore(user)
-    //     }) }
-    // const editUser = () => { axios.put('http://localhost:3000/api/users/'+user.user_id,
-    //     {"username": username}) .then(() => {
-    //     editUserFromStore(user, username) })
-    // }
+
+
+
+
     const userCardStyles: CSS.Properties = {
         display: "inline-block",
         alignItems: 'center',
@@ -119,7 +115,8 @@ const FilmListObject = (filmProps: IFilmProps) => {
 
 
     return (
-        <Card sx={userCardStyles} component={Link} to={`/films/${film.filmId}`}>
+        <Card sx={userCardStyles}>
+            <Link to={`/films/${film.filmId}`} style={{ textDecoration: "none" }}>
             <CardMedia
                 component="img"
                 sx={{ objectFit: "contain" }}
@@ -150,6 +147,7 @@ const FilmListObject = (filmProps: IFilmProps) => {
                 <Rating name="customized-10" value={film.rating||null} readOnly max={10} />
             </Typography>
             </CardContent>
+            </Link>
         </Card> )
 }
 

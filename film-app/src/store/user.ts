@@ -7,6 +7,7 @@ interface UsersState {
     addUser: (id:number, userReturn: UserReturn, users: UserReturn[]) => void;
     setUsers: (users: Array<UserReturn>) => void;
 
+
 }
 
 const getLocalStorage = (key: string): any => JSON.parse(window.localStorage.getItem(key) as string);
