@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Menu, MenuItem } from '@mui/material';
+import {AppBar, Toolbar, Typography, Button, Menu, MenuItem, Alert, AlertTitle} from '@mui/material';
 import { Link } from 'react-router-dom';
 import CSS from 'csstype';
 import { useAuthStore } from '../store/authentication';
+import axios from 'axios';
 
 const NavigationBar: React.FC = () => {
     const authentication = useAuthStore((state) => state.authentication);
     const setAuthentication = useAuthStore((state) => state.setAuthentication);
+    const setUserId = useAuthStore((state) => state.setUserId);
+    const setEmail = useAuthStore((state) => state.setEmail);
+    const setFirstName = useAuthStore((state) => state.setFirstName);
+    const setLastName = useAuthStore((state) => state.setLastName);
     const isAuthenticated = authentication !== '';
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [errorFlag, setErrorFlag] = React.useState(false)
+    const [errorMessage, setErrorMessage] = React.useState("")
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -19,7 +26,26 @@ const NavigationBar: React.FC = () => {
     };
 
     const onLogout = () => {
-        setAuthentication('');
+
+        axios
+            .post(`https://seng365.csse.canterbury.ac.nz/api/v1/users/logout`,{}, {
+                headers: {
+                    'X-Authorization': authentication,
+                },
+            })
+            .then(() => {
+                console.log('Log out successfully')
+                setAuthentication('');
+                setUserId(-1);
+                setEmail('');
+                setFirstName('');
+                setLastName('');
+            })
+            .catch((error) => {
+                setErrorFlag(true);
+                setErrorMessage(error.response.statusText);
+            });
+
     };
 
     const navigationStyles: CSS.Properties = {
@@ -47,8 +73,14 @@ const NavigationBar: React.FC = () => {
         <AppBar position="static" style={navigationStyles}>
             <Toolbar>
                 <Typography variant="h6" component="div" style={{ fontFamily: 'Satisfy, cursive', flexGrow: 1 }}>
-                    Name TBD
+                    Film Festival
                 </Typography>
+                {errorFlag ?
+                    <Alert severity="error">
+                        <AlertTitle>Error</AlertTitle>
+                        {errorMessage}
+                    </Alert>
+                    : ""}
                 <Button component={Link} to="/films" color="inherit">
                     Films
                 </Button>

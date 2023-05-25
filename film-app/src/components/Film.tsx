@@ -4,13 +4,11 @@ import axios from "axios";
 import {Delete, Edit} from "@mui/icons-material";
 import {useFilmStore} from "../store/film";
 import {useGenresStore} from "../store/genre";
-import {useUsersStore} from "../store/user";
-import NotFound from "./404NotFound"
 import {
     Alert, AlertTitle,
     Button, Card, CardActions, CardContent, CardMedia, Dialog,
     DialogActions, DialogContent, DialogContentText,
-    DialogTitle, IconButton, Paper, Rating, SelectChangeEvent, TextField, Typography
+    DialogTitle, IconButton, Paper, Rating, TextField, Typography
 } from "@mui/material";
 import CSS from 'csstype';
 import { FaFilm } from 'react-icons/fa';
@@ -18,13 +16,7 @@ import LoadingPage from "./Loading";
 import FilmListObject from "./FilmListObject";
 import NavigationBar from "./NavigationBar";
 import {useAuthStore} from "../store/authentication";
-interface IFilmProps {
-    filmFull: FilmFull
-}
 
-interface IGenreProps {
-    genre: Genre
-}
 
 interface MyReview {
     rating: number;
@@ -49,7 +41,6 @@ const FilmPage = () => {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const films = useFilmStore(state => state.films)
-    const setFilms = useFilmStore(state => state.setFilms)
     const deleteFilmFromStore = useFilmStore((state) => state.removeFilm);
     const [rating, setRating] = React.useState<number | null>(null)
     const [review, setReview] = React.useState<string | null>(null)
@@ -76,9 +67,10 @@ const FilmPage = () => {
                     'X-Authorization': authentication
                 },
             })
-            .then((response) => {
+            .then(() => {
                 setOpenReviewDialog(false)
                 setReviewErrorFlag(false)
+                window.location.reload();
             })
             .catch((error) => {
                 setReviewErrorFlag(true);
@@ -115,7 +107,7 @@ const FilmPage = () => {
                     navigate('/404NotFound');
                 }) }
         getFilmFull()
-    }, [id, handleReviewClick])
+    }, [id])
 
     React.useEffect(() => {
         const getReviews = () => {
@@ -158,7 +150,7 @@ const FilmPage = () => {
 
     const getDirector = () => {
         if (filmFull === undefined) {
-            return <p>Director not found.</p>
+            return <div><p>Director not found.</p></div>
         } else {
             return (
                 <Card>
@@ -223,11 +215,22 @@ const FilmPage = () => {
         setOpenDeleteDialog(true);
     };
 
+
     const handleEditClick = (event?: React.MouseEvent) => {
         if (event) {
             event.stopPropagation();
         }
-        navigate(`/edit-film/${filmFull?.filmId}`);
+        if (filmFull!.numReviews >=1 ) {
+            window.alert("Cannot edit a film that has been reviewed!");
+            window.close();
+            return
+        }
+        if (filmFull!.releaseDate < new Date().toISOString()) {
+            window.alert("Cannot edit a film that has been released!");
+            window.close();
+            return
+        }
+        navigate(`/editFilm/${filmFull?.filmId}`);
     };
 
 
@@ -235,15 +238,22 @@ const FilmPage = () => {
     const deleteFilm = () => {
         setOpenDeleteDialog(false);
         const confirmDelete = window.confirm("Are you sure about deleting this film?");
+
+
+
         if (confirmDelete) {
             if (filmFull?.numReviews === 0) {
                 window.alert("Cannot delete a film with 0 review!");
                 window.close();
                 return
+            } else if (filmFull!.releaseDate > new Date().toISOString()){
+                window.alert("Cannot delete a film that has not been released!");
+                window.close();
+                return
             }
             axios
                 .delete(
-                    `https://seng365.csse.canterbury.ac.nz/api/v1/films/${filmFull?.filmId}`,
+                    `https://seng365.csse.canterbury.ac.nz/api/v1/films/`+id,
                     {
                         headers: {
                             "X-Authorization": authentication,
@@ -253,6 +263,7 @@ const FilmPage = () => {
                 .then(() => {
                     const film:Film = filmFull!
                     deleteFilmFromStore(film);
+                    navigate('/myFilms');
                 })
                 .catch((error) => {
                     setErrorFlag(true);

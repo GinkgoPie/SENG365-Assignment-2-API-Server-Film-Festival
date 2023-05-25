@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter as Router, Routes, Route, useParams} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import FilmList from "./components/Films";
 import FilmPage from "./components/Film";
 import Home from "./components/Home"
@@ -9,6 +9,8 @@ import LoginPage from "./components/Login";
 import ProfilePage from "./components/Profile";
 import CreateFilmPage from "./components/CreateFilm";
 import MyFilmPage from "./components/MyFilms";
+import EditProfilePage from "./components/EditProfile";
+import EditFilmPage from "./components/EditFilm";
 import NotFoundPage from "./components/404NotFound";
 
 function App() { return (
@@ -24,6 +26,8 @@ function App() { return (
           <Route path='/createFilm' element={<CreateFilmPage />} />
           <Route path='/myFilms' element={<MyFilmPage />} />
           <Route path='/404NotFound' element={<NotFoundPage />} />
+          <Route path='/editProfile' element={<EditProfilePage />} />
+          <Route path='/editFilm/:id' element={<EditFilmPage />} />
       </Routes> </div>
     </Router> </div>
 );

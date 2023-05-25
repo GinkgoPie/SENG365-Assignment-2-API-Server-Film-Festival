@@ -8,7 +8,7 @@ import {
     Select,
     MenuItem,
     SelectChangeEvent,
-    Alert, AlertTitle
+    Alert, AlertTitle, CardMedia
 } from '@mui/material';
 import {useAuthStore} from '../store/authentication';
 import {useGenresStore} from "../store/genre";
@@ -17,22 +17,27 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import NavigationBar from "./NavigationBar";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import NotFound from "./404NotFound";
+import CSS from "csstype";
 
 
 
-interface Film {
-    title: string;
-    description: string;
-    genreId: number;
-    releaseDate?: String;
+
+interface PatchFilm {
+    title?: string;
+    description?: string;
+    genreId?: number;
+    releaseDate?: string;
     ageRating?: string;
     runtime?: number;
 
 }
 
-const CreateFilm: React.FC = () => {
+const EditFilm: React.FC = () => {
+    const { id } = useParams();
+    const [filmFull, setFilmFull] = React.useState<FilmFull>();
+    const patchFilm : PatchFilm = {};
     const authentication = useAuthStore((state) => state.authentication);
     const genres = useGenresStore(state => state.genres)
     const ageRatings: AgeRating[] = ['G', 'PG', 'M', 'R13', 'R16', 'R18'];
@@ -40,17 +45,51 @@ const CreateFilm: React.FC = () => {
     const [description, setDescription] = useState('');
     const [genreId, setGenre] = useState(-1);
     const [date, setDate] = useState<Date | null>(null);
-    const [releaseDate, setReleaseDate] = useState<string | null>(null);
-    const [ageRating, setAgeRating] = useState<string | null>(null);
+    const [releaseDate, setReleaseDate] = useState<string|null>();
+    const [ageRating, setAgeRating] = useState<string>('');
+    const [numReviews,setNumReviews] = useState<number>();
     const [runtime, setRuntime] = useState<number | null>(null);
     const [image, setImage] = useState<File | null>(null);
-    const [filmId, setFilmId] = useState(-1);
-    const [error, setError] = useState('');
     const [errorFlag, setErrorFlag] = React.useState(false)
     const [errorMessage, setErrorMessage] = React.useState("")
     const supportedImageTypes = ["image/jpeg", "image/png", "image/gif"];
     const navigate = useNavigate();
+    const [validationErrors, setValidationErrors] = useState({
+        title: '',
+        description: '',
+        genreId: '',
+        releaseDate: '',
+        ageRating:'',
+        runtime: '',
+        image: ''
+    });
 
+
+
+    React.useEffect(() => {
+        const getFilmFull = () => {
+            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id
+
+            axios.get(url)
+                .then((response) => {
+                    setErrorFlag(false)
+                    setErrorMessage("")
+                    setFilmFull(response.data)
+                    setDescription(response.data.description)
+                    setTitle(response.data.title)
+                    setAgeRating(response.data.ageRating)
+                    setGenre(response.data.genreId)
+                    setRuntime(response.data.runtime)
+                    setNumReviews(response.data.numReviews)
+                    setReleaseDate(response.data.releaseDate)
+                    setDate(new Date(response.data.releaseDate))
+                }, (error) => {
+                    setErrorFlag(true)
+                    setErrorMessage(error.toString())
+                    navigate('/404NotFound');
+                }) }
+        getFilmFull()
+    }, [])
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value);
@@ -74,6 +113,8 @@ const CreateFilm: React.FC = () => {
 
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
+
+
 
     const handleReleaseDateChange = (date: Date | null) => {
         setReleaseDate(formatDate(date!));
@@ -101,70 +142,87 @@ const CreateFilm: React.FC = () => {
     const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // Perform validation on form data
 
-
-        const imageFile = (event.target as HTMLFormElement)["filmImage"].files?.[0];
-        const imageType = imageFile.type;
-        if (!supportedImageTypes.includes(imageType)) {
-            setErrorFlag(true);
-            setErrorMessage('Please select an image file in JPEG, PNG, or GIF format.');
-            return;
+        const newErrors = {
+            title: '',
+            description: '',
+            genreId: '',
+            releaseDate: '',
+            ageRating:'',
+            runtime: '',
+            image: ''
         }
 
 
-        const film: Film = {
-            title,
-            description,
-            genreId,
-
-        };
-        if (releaseDate!==null) {
-            film.releaseDate = releaseDate
+        if (image && !supportedImageTypes.includes(image.type)) {
+            newErrors.image='Please select an image file in JPEG, PNG, or GIF format.';
         }
 
-        if (ageRating!==null) {
-            film.ageRating = ageRating
+        if (title && title !== filmFull?.title){
+            patchFilm.title = title;
         }
 
-        if (runtime!==null) {
-            film.runtime = runtime
+        if (description && description !== filmFull?.description){
+            patchFilm.description = description;
+        }
+
+        if (runtime && runtime !== filmFull?.runtime){
+            patchFilm.runtime = runtime;
+        }
+
+        if (genreId && genreId !== filmFull?.genreId){
+            patchFilm.genreId = genreId;
+        }
+
+        if (ageRating && ageRating !== filmFull?.ageRating){
+            patchFilm.ageRating = ageRating;
+        }
+
+        if (releaseDate && releaseDate !== filmFull?.releaseDate){
+            patchFilm.releaseDate = releaseDate;
+        }
+
+
+        setValidationErrors(newErrors);
+        if (Object.values(newErrors).every(value => value === '')) {
+            axios
+                .patch(`https://seng365.csse.canterbury.ac.nz/api/v1/films/`+ id, patchFilm, {
+                    headers: {
+                        'X-Authorization': authentication,
+                    },
+                })
+                .then(() => {
+
+                    if (image) {
+                        axios
+                            .put(`https://seng365.csse.canterbury.ac.nz/api/v1/films/${id}/image`, image, {
+                                headers: {
+                                    'X-Authorization': authentication,
+                                    'Content-Type': image.type
+                                },
+                            })
+                            .then(() => {
+                                navigate(`/films/${id}`);
+                            })
+                            .catch((error) => {
+                                setErrorFlag(true);
+                                setErrorMessage(error.response.statusText);
+                            });
+                    }
+                    navigate(`/films/${id}`);
+                })
+                .catch((error) => {
+                    setErrorFlag(true);
+                    setErrorMessage(error.response.statusText);
+                });
+
         }
 
 
 
-
-        axios
-            .post(`https://seng365.csse.canterbury.ac.nz/api/v1/films`, film, {
-                headers: {
-                    'X-Authorization': authentication,
-                },
-            })
-            .then((response) => {
-                setFilmId(response.data.filmId);
-
-                if (image) {
-                    axios
-                        .put(`https://seng365.csse.canterbury.ac.nz/api/v1/films/${response.data.filmId}/image`, image, {
-                            headers: {
-                                'X-Authorization': authentication,
-                                'Content-Type': imageType
-                            },
-                        })
-                        .then(() => {
-                            navigate(`/myFilms`);
-                        })
-                        .catch((error) => {
-                            setErrorFlag(true);
-                            setErrorMessage(error.response.statusText);
-                        });
-                }
-            })
-            .catch((error) => {
-                setErrorFlag(true);
-                setErrorMessage(error.response.statusText);
-            });
     };
+
+
     if (authentication === '') {
         return <NotFound/>
     }
@@ -172,8 +230,25 @@ const CreateFilm: React.FC = () => {
         <Paper elevation={3} style={{padding: '120px', maxWidth: '500px', margin: '0 auto'}}>
             <NavigationBar />
             <Typography variant="h5" component="div" style={{marginBottom: '20px'}}>
-                Create a Film
+                Edit Film
             </Typography>
+            <CardMedia
+                    component="img"
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        objectFit: 'contain',
+                        width: '100%',
+                        height: '100%',
+                        margin: '50px'}}
+                    image={'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id + '/image'}
+                    alt="Movie poster"
+                    onError={(e) => {
+                        e.currentTarget.src = 'https://qph.cf2.quoracdn.net/main-qimg-1a4bafe2085452fdc55f646e3e31279c-lq';
+                    }}
+                />
+
             <form onSubmit={handleFormSubmit}>
                 <TextField
                     label="Title"
@@ -183,6 +258,7 @@ const CreateFilm: React.FC = () => {
                     required
                     style={{marginBottom: '10px'}}
                 />
+                {validationErrors.title && <span style={{ color: 'red' }}>{validationErrors.title}</span>}
                 <TextField
                     label="Description"
                     value={description}
@@ -193,6 +269,7 @@ const CreateFilm: React.FC = () => {
                     required
                     style={{marginBottom: '10px'}}
                 />
+                {validationErrors.description && <span style={{ color: 'red' }}>{validationErrors.description}</span>}
                 <TextField
                     label="Runtime"
                     type="number"
@@ -201,6 +278,7 @@ const CreateFilm: React.FC = () => {
                     fullWidth
                     style={{ marginBottom: '10px' }}
                 />
+                {validationErrors.runtime && <span style={{ color: 'red' }}>{validationErrors.runtime}</span>}
                 <InputLabel id="genre-label" required>Genre</InputLabel>
                 <Select
                     labelId="genre-label"
@@ -208,7 +286,7 @@ const CreateFilm: React.FC = () => {
                     value={genreId}
                     onChange={handleGenreChange}
                     renderValue={() =>
-                        genres.find((eachGenre) => eachGenre.genreId === genreId)?.name
+                        genres.find((eachGenre) => eachGenre.genreId === filmFull?.genreId)?.name
                     }
                     fullWidth
                     required
@@ -220,11 +298,13 @@ const CreateFilm: React.FC = () => {
                         </MenuItem>
                     ))}
                 </Select>
+                {validationErrors.genreId && <span style={{ color: 'red' }}>{validationErrors.genreId}</span>}
+
                 <InputLabel id="age-rating-label">Age Rating</InputLabel>
                 <Select
                     labelId="age-rating-label"
                     id="ageRating"
-                    value={ageRating!}
+                    value={ageRating}
                     onChange={handleAgeRatingChange}
                     fullWidth
                     style={{ marginBottom: '10px' }}
@@ -235,6 +315,8 @@ const CreateFilm: React.FC = () => {
                         </MenuItem>
                     ))}
                 </Select>
+                {validationErrors.ageRating && <span style={{ color: 'red' }}>{validationErrors.ageRating}</span>}
+
                 <div style={{ margin: '20px' }}>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateTimePicker
@@ -244,21 +326,20 @@ const CreateFilm: React.FC = () => {
                         />
                     </LocalizationProvider>
                 </div>
-
+                {validationErrors.releaseDate && <span style={{ color: 'red' }}>{validationErrors.releaseDate}</span>}
                 <div style={{ margin: '30px' }}>
-                    <label htmlFor="filmImage" >Image: </label>
+                    <label htmlFor="filmImage" >Update film image: </label>
                     <input
                         type="file"
                         id="filmImage"
                         name="filmImage"
                         accept="image/jpeg, image/png, image/gif"
                         onChange={handleImageChange}
-                        required
                     />
                 </div>
-                {error && <Typography color="error" style={{ marginBottom: '10px' }}>{error}</Typography>}
+                {validationErrors.image && <span style={{ color: 'red' }}>{validationErrors.image}</span>}
                 <Button type="submit" variant="contained" color="primary">
-                    Create Film
+                    Edit Film
                 </Button>
             </form>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
@@ -266,7 +347,6 @@ const CreateFilm: React.FC = () => {
                     <Alert severity="error">
                         <AlertTitle>Error</AlertTitle>
                         {errorMessage}
-                        {error}
                     </Alert>
                     : ""}
             </div>
@@ -274,4 +354,4 @@ const CreateFilm: React.FC = () => {
     );
 };
 
-export default CreateFilm;
+export default EditFilm;
