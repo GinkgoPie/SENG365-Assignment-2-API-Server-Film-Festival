@@ -41,7 +41,7 @@ const MyFilmList = () => {
 
     React.useEffect(() => {
 
-        const getGenres = () => { axios.get('https://seng365.csse.canterbury.ac.nz/api/v1/films/genres')
+        const getGenres = () => { axios.get('http://localhost:4941/api/v1/films/genres')
             .then((response) => {
                 setErrorFlag(false)
                 setErrorMessage("")
@@ -55,7 +55,7 @@ const MyFilmList = () => {
 
     React.useEffect(() => {
         const getAllFilms = () => {
-            const url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films'
+            const url = 'http://localhost:4941/api/v1/films'
 
             setUrl(url);
             axios.get(url)
@@ -91,7 +91,7 @@ const MyFilmList = () => {
 
     React.useEffect(() => {
         const getMyFilms = () => {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films?directorId=' + userId
+            let url = 'http://localhost:4941/api/v1/films?directorId=' + userId
             setUrl(url);
             axios.get(url)
                 .then((response) => {
@@ -105,7 +105,7 @@ const MyFilmList = () => {
         getMyFilms()
         const getReviewedFilms = () => {
 
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films?reviewerId=' + userId
+            let url = 'http://localhost:4941/api/v1/films?reviewerId=' + userId
             setUrl(url);
             axios.get(url)
                 .then((response) => {

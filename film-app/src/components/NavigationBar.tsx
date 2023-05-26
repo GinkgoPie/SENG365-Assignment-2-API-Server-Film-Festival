@@ -28,7 +28,7 @@ const NavigationBar: React.FC = () => {
     const onLogout = () => {
 
         axios
-            .post(`https://seng365.csse.canterbury.ac.nz/api/v1/users/logout`,{}, {
+            .post(`http://localhost:4941/api/v1/users/logout`,{}, {
                 headers: {
                     'X-Authorization': authentication,
                 },

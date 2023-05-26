@@ -5,34 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a33481cf-1a8b-4cce-8cb5-107709633bde" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/film-app/src/components/Home.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/film-app/src/components/NavigationBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/film-app/src/components/Register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/seng365-assignment2-2023.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/seng365-assignment2-2023.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/build/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/favicon 3.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/favicon 4.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/build/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/logo192 3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/logo192 4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/logo512 3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/logo512 4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/manifest 3.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/manifest 4.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/robots 3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/robots 4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.7701aaa1.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.7701aaa1.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.7701aaa1.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/0.pack" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/0.pack" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/index.pack" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/node_modules/.cache/default-development/index.pack" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_05_23,_11_21_am_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_05_23__11_21_am__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.3a1ffc77.js" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/build/static/js/main.3a1ffc77.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/build/static/js/main.3a1ffc77.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/build/static/js/main.3a1ffc77.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/CreateFilm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/CreateFilm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/EditFilm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/EditFilm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/EditProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/EditProfile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/Film.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/Film.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/film-app/src/components/FilmListObject.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/FilmListObject.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/film-app/src/components/Films.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/Films.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/film-app/storage/Film/defaultFilm.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/public/Film/defaultFilm.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/MyFilms.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/MyFilms.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/NavigationBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/NavigationBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/Profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/film-app/src/components/Register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/film-app/src/components/Register.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +47,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TODO_SCOPE": "All Places",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "/csse/users/jba214/Desktop/SENG365/seng365-assignment1-2023",
     "node.js.detected.package.eslint": "true",
@@ -81,7 +70,7 @@
       <recent name="$PROJECT_DIR$/film-app/public" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/film-app/package.json" />
       <command value="run" />
@@ -121,6 +110,7 @@
       <workItem from="1683940366617" duration="1414000" />
       <workItem from="1683941795309" duration="12179000" />
       <workItem from="1684365589443" duration="15697000" />
+      <workItem from="1685054541009" duration="10362000" />
     </task>
     <task id="LOCAL-00001" summary=" stuck on filter">
       <created>1683956522539</created>

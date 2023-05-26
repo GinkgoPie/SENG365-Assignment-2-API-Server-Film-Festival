@@ -35,7 +35,7 @@ const FilmList = () => {
     const [selectedSortOption, setSelectedSortOption] = React.useState("");
 
     React.useEffect(() => {
-        const getGenres = () => { axios.get('https://seng365.csse.canterbury.ac.nz/api/v1/films/genres')
+        const getGenres = () => { axios.get('http://localhost:4941/api/v1/films/genres')
             .then((response) => {
                 setErrorFlag(false)
                 setErrorMessage("")
@@ -94,7 +94,7 @@ const FilmList = () => {
 
     React.useEffect(() => {
         const getFilms = () => {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films'
+            let url = 'http://localhost:4941/api/v1/films'
             if (query !== '') {
                 url = url + '?q=' + query
             }

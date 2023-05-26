@@ -62,7 +62,7 @@ const FilmPage = () => {
         }
 
         axios
-            .post(`https://seng365.csse.canterbury.ac.nz/api/v1/films/${id}/reviews`, myReview, {
+            .post(`http://localhost:4941/api/v1/films/${id}/reviews`, myReview, {
                 headers: {
                     'X-Authorization': authentication
                 },
@@ -94,7 +94,7 @@ const FilmPage = () => {
 
     React.useEffect(() => {
         const getFilmFull = () => {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id
+            let url = 'http://localhost:4941/api/v1/films/' + id
 
             axios.get(url)
                 .then((response) => {
@@ -111,7 +111,7 @@ const FilmPage = () => {
 
     React.useEffect(() => {
         const getReviews = () => {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id + '/reviews'
+            let url = 'http://localhost:4941/api/v1/films/' + id + '/reviews'
 
             axios.get(url)
                 .then((response) => {
@@ -145,7 +145,7 @@ const FilmPage = () => {
     }
 
     const getDirectorImagePath = (filmFull: FilmFull) => {
-        return 'https://seng365.csse.canterbury.ac.nz/api/v1/users/' + filmFull.directorId + '/image'
+        return 'http://localhost:4941/api/v1/users/' + filmFull.directorId + '/image'
     }
 
     const getDirector = () => {
@@ -184,7 +184,7 @@ const FilmPage = () => {
     }
 
     const getFileImagePath = () => {
-        return 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + filmFull?.filmId + '/image'
+        return 'http://localhost:4941/api/v1/films/' + filmFull?.filmId + '/image'
     }
 
     const getSimilarFilms = () => {
@@ -220,7 +220,7 @@ const FilmPage = () => {
         if (event) {
             event.stopPropagation();
         }
-        if (filmFull!.numReviews >=1 ) {
+        if (filmFull!.numReviews >= 1 ) {
             window.alert("Cannot edit a film that has been reviewed!");
             window.close();
             return
@@ -242,18 +242,14 @@ const FilmPage = () => {
 
 
         if (confirmDelete) {
-            if (filmFull?.numReviews === 0) {
-                window.alert("Cannot delete a film with 0 review!");
-                window.close();
-                return
-            } else if (filmFull!.releaseDate > new Date().toISOString()){
-                window.alert("Cannot delete a film that has not been released!");
+            if (filmFull?.numReviews === 0 && filmFull!.releaseDate > new Date().toISOString()) {
+                window.alert("Cannot delete a film that has not been released with 0 review !\"");
                 window.close();
                 return
             }
             axios
                 .delete(
-                    `https://seng365.csse.canterbury.ac.nz/api/v1/films/`+id,
+                    `http://localhost:4941/api/v1/films/`+id,
                     {
                         headers: {
                             "X-Authorization": authentication,
@@ -282,13 +278,16 @@ const FilmPage = () => {
     };
 
     function getReviewsContent() {
+        if (reviews?.length === 0) {
+            return (<th>No reviews yet.</th>)
+        }
         return (
             <table>
                 <thead>
                 <tr>
                     <th>Reviewer</th>
                     <th>Name</th>
-                    <th>Rating</th>
+                    <th>Rating</th>handleEditClick
                     <th>Comment</th>
                 </tr>
                 </thead>
@@ -309,7 +308,7 @@ const FilmPage = () => {
                                 textAlign: "center",
                                 padding: '20px'
                             }}
-                            image={'https://seng365.csse.canterbury.ac.nz/api/v1/users/' + review.reviewerId + '/image'}
+                            image={'http://localhost:4941/api/v1/users/' + review.reviewerId + '/image'}
                             alt="Reviewer image not found"
                             onError={(e) => {
                                 e.currentTarget.src = "https://png.pngitem.com/pimgs/s/150-1503945_transparent-user-png-default-user-image-png-png.png";

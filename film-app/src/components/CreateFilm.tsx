@@ -50,6 +50,13 @@ const CreateFilm: React.FC = () => {
     const [errorMessage, setErrorMessage] = React.useState("")
     const supportedImageTypes = ["image/jpeg", "image/png", "image/gif"];
     const navigate = useNavigate();
+    const [validationErrors, setValidationErrors] = useState({
+        title: '',
+        description: '',
+        genreId: '',
+        runtime: '',
+        image: ''
+    });
 
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,22 +102,47 @@ const CreateFilm: React.FC = () => {
 
 
 
-
-
-
     const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // Perform validation on form data
+        const newErrors = {
+            title: '',
+            description: '',
+            genreId: '',
+            runtime: '',
+            image: ''
+        }
 
 
         const imageFile = (event.target as HTMLFormElement)["filmImage"].files?.[0];
         const imageType = imageFile.type;
         if (!supportedImageTypes.includes(imageType)) {
-            setErrorFlag(true);
-            setErrorMessage('Please select an image file in JPEG, PNG, or GIF format.');
-            return;
+            newErrors.image = 'Please select an image file in JPEG, PNG, or GIF format.'
         }
+
+
+        if (title.trim() === '') {
+            newErrors.title = 'Title is required'
+        }
+
+        if (description.trim() === '') {
+            newErrors.description = 'Description is required'
+        }
+
+        if(runtime && runtime < 0) {
+            newErrors.runtime = 'Runtime cannot be negative number'
+        }
+
+        if (genreId === -1) {
+            newErrors.genreId = 'Genre is required'
+        }
+
+        setValidationErrors(newErrors)
+
+        if (!Object.values(newErrors).every(value => value === '')) {
+            return
+        }
+
 
 
         const film: Film = {
@@ -134,8 +166,10 @@ const CreateFilm: React.FC = () => {
 
 
 
+
+
         axios
-            .post(`https://seng365.csse.canterbury.ac.nz/api/v1/films`, film, {
+            .post(`http://localhost:4941/api/v1/films`, film, {
                 headers: {
                     'X-Authorization': authentication,
                 },
@@ -145,7 +179,7 @@ const CreateFilm: React.FC = () => {
 
                 if (image) {
                     axios
-                        .put(`https://seng365.csse.canterbury.ac.nz/api/v1/films/${response.data.filmId}/image`, image, {
+                        .put(`http://localhost:4941/api/v1/films/${response.data.filmId}/image`, image, {
                             headers: {
                                 'X-Authorization': authentication,
                                 'Content-Type': imageType
@@ -183,6 +217,7 @@ const CreateFilm: React.FC = () => {
                     required
                     style={{marginBottom: '10px'}}
                 />
+                {validationErrors.title && <span style={{ color: 'red' }}>{validationErrors.title}</span>}
                 <TextField
                     label="Description"
                     value={description}
@@ -193,6 +228,7 @@ const CreateFilm: React.FC = () => {
                     required
                     style={{marginBottom: '10px'}}
                 />
+                {validationErrors.description && <span style={{ color: 'red' }}>{validationErrors.description}</span>}
                 <TextField
                     label="Runtime"
                     type="number"
@@ -201,6 +237,7 @@ const CreateFilm: React.FC = () => {
                     fullWidth
                     style={{ marginBottom: '10px' }}
                 />
+                {validationErrors.runtime && <span style={{ color: 'red' }}>{validationErrors.runtime}</span>}
                 <InputLabel id="genre-label" required>Genre</InputLabel>
                 <Select
                     labelId="genre-label"
@@ -220,6 +257,7 @@ const CreateFilm: React.FC = () => {
                         </MenuItem>
                     ))}
                 </Select>
+                {validationErrors.genreId && <span style={{ color: 'red' }}>{validationErrors.genreId}</span>}
                 <InputLabel id="age-rating-label">Age Rating</InputLabel>
                 <Select
                     labelId="age-rating-label"
@@ -244,7 +282,7 @@ const CreateFilm: React.FC = () => {
                         />
                     </LocalizationProvider>
                 </div>
-
+                {validationErrors.image && <span style={{ color: 'red' }}>{validationErrors.image}</span>}
                 <div style={{ margin: '30px' }}>
                     <label htmlFor="filmImage" >Image: </label>
                     <input
@@ -255,8 +293,9 @@ const CreateFilm: React.FC = () => {
                         onChange={handleImageChange}
                         required
                     />
+
                 </div>
-                {error && <Typography color="error" style={{ marginBottom: '10px' }}>{error}</Typography>}
+
                 <Button type="submit" variant="contained" color="primary">
                     Create Film
                 </Button>

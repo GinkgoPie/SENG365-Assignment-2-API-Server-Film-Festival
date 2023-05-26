@@ -6,6 +6,7 @@ import CSS from "csstype";
 import {useAuthStore} from "../store/authentication";
 import axios from "axios";
 import {useFilmStore} from "../store/film";
+import NotFound from "./404NotFound";
 
 interface User {
     email: string;
@@ -55,7 +56,7 @@ const LoginPage: React.FC = () => {
             setPostForm(false);
             const loginData = { email: email, password: password }
             const postLoginForm = () => {
-                let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/login'
+                let url = 'http://localhost:4941/api/v1/users/login'
                 axios.post(url, loginData)
                     .then((response) => {
                         setAuthentication(response.data.token)
@@ -80,8 +81,12 @@ const LoginPage: React.FC = () => {
         textAlign: "center"
     }
     const loginData = { email: email, password: password }
+    if (authentication !== '') {
+        return <NotFound/>
+    }
 
     return (
+
         <Paper elevation={3} style={{ padding: '150px' }}>
             <NavigationBar />
             <Card sx={loginCardStyles}>

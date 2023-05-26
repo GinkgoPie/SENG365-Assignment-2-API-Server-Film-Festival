@@ -19,7 +19,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import NavigationBar from "./NavigationBar";
 import {useNavigate, useParams} from "react-router-dom";
 import NotFound from "./404NotFound";
-import CSS from "csstype";
+
 
 
 
@@ -39,6 +39,7 @@ const EditFilm: React.FC = () => {
     const [filmFull, setFilmFull] = React.useState<FilmFull>();
     const patchFilm : PatchFilm = {};
     const authentication = useAuthStore((state) => state.authentication);
+    const userId = useAuthStore((state) => state.userId);
     const genres = useGenresStore(state => state.genres)
     const ageRatings: AgeRating[] = ['G', 'PG', 'M', 'R13', 'R16', 'R18'];
     const [title, setTitle] = useState('');
@@ -68,7 +69,7 @@ const EditFilm: React.FC = () => {
 
     React.useEffect(() => {
         const getFilmFull = () => {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id
+            let url = 'http://localhost:4941/api/v1/films/' + id
 
             axios.get(url)
                 .then((response) => {
@@ -158,19 +159,27 @@ const EditFilm: React.FC = () => {
             newErrors.image='Please select an image file in JPEG, PNG, or GIF format.';
         }
 
-        if (title && title !== filmFull?.title){
+        if (title.trim() === '') {
+            newErrors.title = 'Title is required'
+        } else if (title !== filmFull?.title){
             patchFilm.title = title;
         }
 
-        if (description && description !== filmFull?.description){
+        if (description.trim() === '') {
+            newErrors.description = 'Description is required'
+        }else if (description !== filmFull?.description){
             patchFilm.description = description;
         }
 
-        if (runtime && runtime !== filmFull?.runtime){
+        if(runtime && runtime < 0) {
+            newErrors.runtime = 'Runtime cannot be negative number'
+        } else if (runtime && runtime !== filmFull?.runtime){
             patchFilm.runtime = runtime;
         }
 
-        if (genreId && genreId !== filmFull?.genreId){
+        if (genreId === -1) {
+            newErrors.genreId = 'Genre is required'
+        } else if (genreId !== filmFull?.genreId){
             patchFilm.genreId = genreId;
         }
 
@@ -184,9 +193,10 @@ const EditFilm: React.FC = () => {
 
 
         setValidationErrors(newErrors);
+
         if (Object.values(newErrors).every(value => value === '')) {
             axios
-                .patch(`https://seng365.csse.canterbury.ac.nz/api/v1/films/`+ id, patchFilm, {
+                .patch(`http://localhost:4941/api/v1/films/`+ id, patchFilm, {
                     headers: {
                         'X-Authorization': authentication,
                     },
@@ -195,7 +205,7 @@ const EditFilm: React.FC = () => {
 
                     if (image) {
                         axios
-                            .put(`https://seng365.csse.canterbury.ac.nz/api/v1/films/${id}/image`, image, {
+                            .put(`http://localhost:4941/api/v1/films/${id}/image`, image, {
                                 headers: {
                                     'X-Authorization': authentication,
                                     'Content-Type': image.type
@@ -223,7 +233,7 @@ const EditFilm: React.FC = () => {
     };
 
 
-    if (authentication === '') {
+    if (authentication === '' || filmFull?.directorId !== userId) {
         return <NotFound/>
     }
     return (
@@ -242,7 +252,7 @@ const EditFilm: React.FC = () => {
                         width: '100%',
                         height: '100%',
                         margin: '50px'}}
-                    image={'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + id + '/image'}
+                    image={'http://localhost:4941/api/v1/films/' + id + '/image'}
                     alt="Movie poster"
                     onError={(e) => {
                         e.currentTarget.src = 'https://qph.cf2.quoracdn.net/main-qimg-1a4bafe2085452fdc55f646e3e31279c-lq';

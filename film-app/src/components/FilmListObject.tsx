@@ -72,7 +72,7 @@ const FilmListObject = (filmProps: IFilmProps) => {
     }
 
     const getDirectorImagePath = (film: Film) => {
-        return 'https://seng365.csse.canterbury.ac.nz/api/v1/users/' + film.directorId + '/image'
+        return 'http://localhost:4941/api/v1/users/' + film.directorId + '/image'
     }
 
     const getDirector = () => {
@@ -107,7 +107,7 @@ const FilmListObject = (filmProps: IFilmProps) => {
     }
 
     const getFileImagePath = () => {
-        return 'https://seng365.csse.canterbury.ac.nz/api/v1/films/' + film.filmId + '/image'
+        return 'http://localhost:4941/api/v1/films/' + film.filmId + '/image'
     }
 
 

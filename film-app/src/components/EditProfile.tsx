@@ -41,8 +41,6 @@ const EditProfile: React.FC = () => {
     const supportedImageTypes = ["image/jpeg", "image/png", "image/gif"];
     const [imageType, setImageType] = useState<any | null>(null);
     const navigate = useNavigate();
-    const [isUpdateDisabled, setUpdateDisabled] = useState(false);
-    const [isRemoveDisabled, setRemoveDisabled] = useState(false);
     const [profileImageError, setProfileImageError] = useState('');
     const [validationErrors, setValidationErrors] = useState({
         firstName: '',
@@ -62,12 +60,11 @@ const EditProfile: React.FC = () => {
         } else if (!supportedImageTypes.includes(imageType)) {
             setProfileImageError('Please select an image file in JPEG, PNG, or GIF format.');
         }
-        setUpdateDisabled(false);
-        setRemoveDisabled(true);
+
         if (profilePicture) {
             console.log('Try profile upload');
             axios
-                .put(`https://seng365.csse.canterbury.ac.nz/api/v1/users/${userId}/image`, profilePicture, {
+                .put(`http://localhost:4941/api/v1/users/${userId}/image`, profilePicture, {
                     headers: {
                         'X-Authorization': authentication,
                         'Content-Type': imageType
@@ -75,7 +72,7 @@ const EditProfile: React.FC = () => {
                 })
                 .then(() => {
                     console.log('Put profile successfully');
-                    navigate(`/myProfile`);
+                    window.location.href = "/myProfile";
                 })
                 .catch((error) => {
                     console.log('Updated profile failed');
@@ -184,7 +181,7 @@ const EditProfile: React.FC = () => {
 
 
         if (Object.values(newErrors).every(value => value === '')) {
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/' + userId
+            let url = 'http://localhost:4941/api/v1/users/' + userId
             axios.patch(url, editProfileForm, {
                 headers: {
                     'X-Authorization': authentication
@@ -192,7 +189,7 @@ const EditProfile: React.FC = () => {
                 .then((response) => {
                     console.log('Edit profile form submitted successfully');
                     console.log(response.status);
-                    navigate("/myProfile")
+                    window.location.href = "/myProfile";
                 }, (error) => {
                     setErrorFlag(true)
                     setErrorMessage(error.response.statusText)
@@ -219,19 +216,17 @@ const EditProfile: React.FC = () => {
     };
 
     const deleteProfileImage = () => {
-        setRemoveDisabled(false);
-        setUpdateDisabled(true);
         setProfilePicture(null)
         setImageType(null)
         axios
-            .delete(`https://seng365.csse.canterbury.ac.nz/api/v1/users/${userId}/image`, {
+            .delete(`http://localhost:4941/api/v1/users/${userId}/image`, {
                 headers: {
                     'X-Authorization': authentication
                 },
             })
             .then(() => {
                 console.log('Delete profile successfully');
-                navigate("/myProfile")
+                window.location.href = "/myProfile";
             })
             .catch((error) => {
                 console.log('Delete profile failed');
@@ -261,7 +256,7 @@ const EditProfile: React.FC = () => {
                         margin: "auto",
                         textAlign: "center"
                     }}
-                    image={`https://seng365.csse.canterbury.ac.nz/api/v1/users/${userId}/image`}
+                    image={`http://localhost:4941/api/v1/users/${userId}/image`}
                     alt="Movie poster"
                     onError={(e) => {
                         e.currentTarget.src = "https://png.pngitem.com/pimgs/s/150-1503945_transparent-user-png-default-user-image-png-png.png";
@@ -278,10 +273,10 @@ const EditProfile: React.FC = () => {
                         onChange={handleProfilePictureChange}
                     />
                     <div>
-                        <Button onClick={updateProfileImage} disabled={isUpdateDisabled} sx={{ backgroundColor: 'gray', color: 'white', margin: '30px'}}>
+                        <Button onClick={updateProfileImage} sx={{ backgroundColor: 'gray', color: 'white', margin: '30px'}}>
                             Update profile image
                         </Button>
-                        <Button onClick={deleteProfileImage} disabled={isRemoveDisabled} sx={{ backgroundColor: 'gray', color: 'white' }}>
+                        <Button onClick={deleteProfileImage} sx={{ backgroundColor: 'gray', color: 'white' }}>
                             Remove profile image
                         </Button>
                     </div>

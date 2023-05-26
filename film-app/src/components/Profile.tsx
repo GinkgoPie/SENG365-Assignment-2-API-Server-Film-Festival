@@ -36,7 +36,7 @@ const UserProfilePage: React.FC = () => {
         if (authentication !== '') {
 
             const getUserInfo = () => {
-                axios.get('https://seng365.csse.canterbury.ac.nz/api/v1/users/' + userId, {
+                axios.get('http://localhost:4941/api/v1/users/' + userId, {
                     headers: {
                         'X-Authorization': authentication,
                     },})
@@ -64,6 +64,7 @@ const UserProfilePage: React.FC = () => {
     }
 
     React.useEffect(() => {
+
         const timer = setTimeout(() => {
             setIsLoading(false);
         }, 800);
@@ -77,6 +78,8 @@ const UserProfilePage: React.FC = () => {
     if (errorFlag || authentication ==='') {
         return <NotFound />
     }
+
+
 
     if (isLoading) {
         return <LoadingPage />;
@@ -98,8 +101,8 @@ const UserProfilePage: React.FC = () => {
                             margin: "auto",
                             textAlign: "center"
                         }}
-                        image={`https://seng365.csse.canterbury.ac.nz/api/v1/users/${userId}/image`}
-                        alt="Movie poster"
+                        image={`http://localhost:4941/api/v1/users/${userId}/image`}
+                        alt="Profile image"
                         onError={(e) => {
                             e.currentTarget.src = "https://png.pngitem.com/pimgs/s/150-1503945_transparent-user-png-default-user-image-png-png.png";
                         }}

@@ -121,14 +121,14 @@ const RegisterPage = () => {
         if (Object.values(newErrors).every(value => value === '')) {
             // Perform registration logic here
             console.log('Form submitted successfully');
-            let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/register'
+            let url = 'http://localhost:4941/api/v1/users/register'
             const { confirmPassword, ...formDataWithoutConfirmPassword } = formData;
             axios.post(url, formDataWithoutConfirmPassword)
                 .then((response) => {
                     console.log(response);
                     setUserId(response.data.userId)
                     const loginData = { email: formData.email, password: formData.password }
-                    let url = 'https://seng365.csse.canterbury.ac.nz/api/v1/users/login'
+                    let url = 'http://localhost:4941/api/v1/users/login'
                     axios.post(url, loginData)
                         .then((response) => {
                             console.log('Logging in successfully');
@@ -138,7 +138,7 @@ const RegisterPage = () => {
                                 console.log('Try profile upload');
 
                                 axios
-                                    .put(`https://seng365.csse.canterbury.ac.nz/api/v1/users/${response.data.userId}/image`, image, {
+                                    .put(`http://localhost:4941/api/v1/users/${response.data.userId}/image`, image, {
                                         headers: {
                                             'X-Authorization': response.data.token,
                                             'Content-Type': imageType
